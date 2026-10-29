@@ -12,6 +12,10 @@ from components.metrics import render_risk_badge, render_alert_box, render_kpi_c
 from components.charts import create_risk_gauge, create_shap_waterfall_chart
 from src.models.predict import predict_single, load_pipeline
 from src.models.explain import explain_prediction
+from src.analytics.narrative import (
+    generate_llm_plain_english_summary,
+    generate_deterministic_plain_english_summary
+)
 
 st.set_page_config(
     page_title="Employee Risk Analysis | AttritionIQ",
