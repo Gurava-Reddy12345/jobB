@@ -9,7 +9,7 @@ import streamlit as st
 import pandas as pd
 
 from components.sidebar import render_sidebar
-from components.metrics import render_kpi_card, render_alert_box
+from components.metrics import render_kpi_card, render_alert_box, _render_html
 from src.analytics.workforce import load_and_prepare_historical_data, calculate_kpis
 
 st.set_page_config(
@@ -55,12 +55,8 @@ st.markdown(
         border: 1px solid #e2e8f0;
         border-radius: 12px;
         padding: 1.4rem;
-        height: 100%;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    .module-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+        margin-bottom: 0.8rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
     .module-title {
         font-weight: 700;
@@ -81,28 +77,31 @@ st.markdown(
 render_sidebar()
 
 # Hero Banner
-st.markdown(
-    """
-    <div class="hero-banner">
-        <div style="display: inline-block; background: rgba(255,255,255,0.15); padding: 0.3rem 0.8rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;">
-            Enterprise Workforce Analytics & Machine Learning
-        </div>
-        <div class="hero-title">AttritionIQ Platform</div>
-        <div class="hero-subtitle">
-            An explainable employee attrition prediction and workforce analytics suite.
-            Engineered with transparent machine learning, SHAP explainability, what-if counterfactual simulation, and rigorous data quality auditing.
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
+hero_html = (
+    "<div class='hero-banner'>"
+    "<div style='display: inline-block; background: rgba(255,255,255,0.15); padding: 0.3rem 0.8rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;'>"
+    "Enterprise Workforce Analytics & Machine Learning"
+    "</div>"
+    "<div class='hero-title'>AttritionIQ Platform</div>"
+    "<div class='hero-subtitle'>"
+    "An explainable employee attrition prediction and workforce analytics suite. "
+    "Engineered with transparent machine learning, SHAP explainability, what-if counterfactual simulation, and rigorous data quality auditing."
+    "</div>"
+    "</div>"
 )
+_render_html(hero_html)
 
 # Load data for high-level headline KPIs
 try:
     df_raw = load_and_prepare_historical_data()
-    eval_path = os.path.join("reports", "model_evaluation.json")
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+    candidates = [
+        os.path.join(root_dir, "reports", "model_evaluation.json"),
+        os.path.join("reports", "model_evaluation.json")
+    ]
+    eval_path = next((c for c in candidates if os.path.exists(c)), None)
     test_recall = None
-    if os.path.exists(eval_path):
+    if eval_path and os.path.exists(eval_path):
         with open(eval_path, "r") as f:
             eval_data = json.load(f)
             test_recall = eval_data.get("model_comparison", {}).get("Random Forest", {}).get("test_metrics_default", {}).get("recall")
@@ -139,50 +138,44 @@ st.write("Select a module below or use the sidebar navigation to get started:")
 row1_col1, row1_col2, row1_col3 = st.columns(3)
 
 with row1_col1:
-    st.markdown(
-        """
-        <div class="module-card">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">📊</div>
-            <div class="module-title">1. Workforce Overview</div>
-            <div class="module-desc">
-                Discover macro attrition patterns across departments, salary bands, satisfaction tiers, and company tenure. Includes automated statistical insight callouts.
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
+    card_p1 = (
+        "<div class='module-card'>"
+        "<div style='font-size: 1.8rem; margin-bottom: 8px;'>📊</div>"
+        "<div class='module-title'>1. Workforce Overview</div>"
+        "<div class='module-desc'>"
+        "Discover macro attrition patterns across departments, salary bands, satisfaction tiers, and company tenure. Includes automated statistical insight callouts."
+        "</div>"
+        "</div>"
     )
+    _render_html(card_p1)
     if st.button("Open Workforce Overview →", key="btn_p1", use_container_width=True):
         st.switch_page("pages/1_Workforce_Overview.py")
 
 with row1_col2:
-    st.markdown(
-        """
-        <div class="module-card">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">🎯</div>
-            <div class="module-title">2. Employee Risk Analysis</div>
-            <div class="module-desc">
-                Evaluate individual flight probability using our trained ML pipeline. Includes SHAP-based feature attributions and actionable HR retention strategies.
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
+    card_p2 = (
+        "<div class='module-card'>"
+        "<div style='font-size: 1.8rem; margin-bottom: 8px;'>🎯</div>"
+        "<div class='module-title'>2. Employee Risk Analysis</div>"
+        "<div class='module-desc'>"
+        "Evaluate individual flight probability using our trained ML pipeline. Includes SHAP-based feature attributions and actionable HR retention strategies."
+        "</div>"
+        "</div>"
     )
+    _render_html(card_p2)
     if st.button("Open Risk Analysis →", key="btn_p2", use_container_width=True):
         st.switch_page("pages/2_Employee_Risk_Analysis.py")
 
 with row1_col3:
-    st.markdown(
-        """
-        <div class="module-card">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">📁</div>
-            <div class="module-title">3. Batch Predictions</div>
-            <div class="module-desc">
-                Upload new employee CSV datasets, validate schema fidelity, diagnose erroneous records, and export scored flight risk batches with primary driver tags.
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
+    card_p3 = (
+        "<div class='module-card'>"
+        "<div style='font-size: 1.8rem; margin-bottom: 8px;'>📁</div>"
+        "<div class='module-title'>3. Batch Predictions</div>"
+        "<div class='module-desc'>"
+        "Upload new employee CSV datasets, validate schema fidelity, diagnose erroneous records, and export scored flight risk batches with primary driver tags."
+        "</div>"
+        "</div>"
     )
+    _render_html(card_p3)
     if st.button("Open Batch Predictions →", key="btn_p3", use_container_width=True):
         st.switch_page("pages/3_Batch_Predictions.py")
 
@@ -190,50 +183,44 @@ st.write("")
 row2_col1, row2_col2, row2_col3 = st.columns(3)
 
 with row2_col1:
-    st.markdown(
-        """
-        <div class="module-card">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">📈</div>
-            <div class="module-title">4. Model Performance</div>
-            <div class="module-desc">
-                Inspect honest test set evaluation metrics across Logistic Regression, Random Forest, and HistGradientBoosting with ROC curves, PR curves, and reliability analysis.
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
+    card_p4 = (
+        "<div class='module-card'>"
+        "<div style='font-size: 1.8rem; margin-bottom: 8px;'>📈</div>"
+        "<div class='module-title'>4. Model Performance</div>"
+        "<div class='module-desc'>"
+        "Inspect honest test set evaluation metrics across Logistic Regression, Random Forest, and HistGradientBoosting with ROC curves, PR curves, and reliability analysis."
+        "</div>"
+        "</div>"
     )
+    _render_html(card_p4)
     if st.button("Open Model Performance →", key="btn_p4", use_container_width=True):
         st.switch_page("pages/4_Model_Performance.py")
 
 with row2_col2:
-    st.markdown(
-        """
-        <div class="module-card">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">🧪</div>
-            <div class="module-title">5. What-If Scenario Lab</div>
-            <div class="module-desc">
-                Simulate policy adjustments—such as salary tier updates or workload rebalancing—and compare model-predicted flight risk shifts side-by-side.
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
+    card_p5 = (
+        "<div class='module-card'>"
+        "<div style='font-size: 1.8rem; margin-bottom: 8px;'>🧪</div>"
+        "<div class='module-title'>5. What-If Scenario Lab</div>"
+        "<div class='module-desc'>"
+        "Simulate policy adjustments—such as salary tier updates or workload rebalancing—and compare model-predicted flight risk shifts side-by-side."
+        "</div>"
+        "</div>"
     )
+    _render_html(card_p5)
     if st.button("Open What-If Lab →", key="btn_p5", use_container_width=True):
         st.switch_page("pages/5_What_If_Lab.py")
 
 with row2_col3:
-    st.markdown(
-        """
-        <div class="module-card">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">🛡️</div>
-            <div class="module-title">6. Data Quality & Audit</div>
-            <div class="module-desc">
-                Review data health audits, repeated feature profile diagnostics, target leak prevention, model versioning, and download the full audit report.
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
+    card_p6 = (
+        "<div class='module-card'>"
+        "<div style='font-size: 1.8rem; margin-bottom: 8px;'>🛡️</div>"
+        "<div class='module-title'>6. Data Quality & Audit</div>"
+        "<div class='module-desc'>"
+        "Review data health audits, repeated feature profile diagnostics, target leak prevention, model versioning, and download the full audit report."
+        "</div>"
+        "</div>"
     )
+    _render_html(card_p6)
     if st.button("Open Data Quality Audit →", key="btn_p6", use_container_width=True):
         st.switch_page("pages/6_Data_Quality_Audit.py")
 

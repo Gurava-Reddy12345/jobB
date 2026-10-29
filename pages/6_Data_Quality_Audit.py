@@ -25,18 +25,28 @@ st.title("🛡️ Data Quality & Governance Audit")
 st.markdown("Complete data lifecycle audit, target isolation verification, duplicate profile analysis, and schema governance.")
 
 # Load raw dataset and audit report
-report_path = os.path.join("reports", "data_quality_report.json")
-meta_path = os.path.join("artifacts", "model_metadata.json")
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+report_candidates = [
+    os.path.join("reports", "data_quality_report.json"),
+    os.path.join(root_dir, "reports", "data_quality_report.json")
+]
+report_path = next((c for c in report_candidates if os.path.exists(c)), None)
 
-if os.path.exists(report_path):
+meta_candidates = [
+    os.path.join("artifacts", "model_metadata.json"),
+    os.path.join(root_dir, "artifacts", "model_metadata.json")
+]
+meta_path = next((c for c in meta_candidates if os.path.exists(c)), None)
+
+if report_path and os.path.exists(report_path):
     with open(report_path, "r") as f:
         audit_data = json.load(f)
 else:
-    df_raw = pd.read_csv("data/raw/HR_Employee_Data.csv")
+    df_raw = pd.read_csv("data/raw/HR_Employee_Data.csv") if os.path.exists("data/raw/HR_Employee_Data.csv") else pd.read_csv(os.path.join(root_dir, "data", "raw", "HR_Employee_Data.csv"))
     audit_data = get_data_quality_summary(df_raw)
 
 metadata = {}
-if os.path.exists(meta_path):
+if meta_path and os.path.exists(meta_path):
     with open(meta_path, "r") as f:
         metadata = json.load(f)
 

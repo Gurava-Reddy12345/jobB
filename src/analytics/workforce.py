@@ -12,8 +12,18 @@ import numpy as np
 from src.features.preprocessing import clean_pct_series
 
 
-def load_and_prepare_historical_data(file_path: str = "data/raw/HR_Employee_Data.csv") -> pd.DataFrame:
-    """Loads and sanitizes raw historical HR dataset."""
+def load_and_prepare_historical_data(file_path: Optional[str] = None) -> pd.DataFrame:
+    """Loads and sanitizes raw historical HR dataset with robust multi-location fallback."""
+    if file_path is None:
+        root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        candidates = [
+            os.path.join(root_dir, "data", "raw", "HR_Employee_Data.csv"),
+            os.path.join(root_dir, "HR_Employee_Data.csv"),
+            os.path.join("data", "raw", "HR_Employee_Data.csv"),
+            "HR_Employee_Data.csv"
+        ]
+        file_path = next((c for c in candidates if os.path.exists(c)), "data/raw/HR_Employee_Data.csv")
+
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Historical dataset not found at {file_path}")
 

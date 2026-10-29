@@ -98,18 +98,44 @@ AttritionIQ/
 
 When inspecting the raw historical dataset (`HR_Employee_Data.csv`), standard raw predictors missed critical cross-feature behavioral dynamics (such as burnout and underappreciation). To maximize predictive precision and recall, we engineered 10 domain-specific parameters:
 
-| Engineered Feature | Mathematical Formulation | Behavioral Signal & Rationale | Feature Importance Rank |
+| Engineered Feature | Formulation | Behavioral Signal & Rationale | Feature Importance Rank |
 |---|---|---|:---:|
-| `eval_sat_diff` | $\text{last\_evaluation} - \text{satisfaction\_level}$ | **Underappreciated Performer Gap**: High performance combined with low satisfaction is a proven precursor to departure. | **Top 5 (8.34%)** |
-| `projects_per_year` | $\frac{\text{number\_project}}{\text{time\_spend\_company}}$ | **Project Velocity**: Measures workload intensity relative to organizational tenure. | **Top 4 (8.75%)** |
-| `hours_per_project` | $\frac{\text{average\_montly\_hours}}{\text{number\_project}}$ | **Workload Concentration**: Differentiates multi-tasking overload from deep-focus allocation. | **Top 8 (5.37%)** |
-| `overworked` | $\mathbb{I}(\text{hours} > 240 \land \text{projects} \ge 5)$ | **Overwork / Overtime Flag**: Identifies chronic overtime contributors. | **Top 9 (5.16%)** |
-| `burnout_risk` | $\mathbb{I}(\text{eval} > 0.75 \land \text{hours} > 220 \land \text{sat} < 0.45)$ | **High-Performer Burnout Indicator**: Identifies critical talent at immediate risk of exhaustion. | **Significant** |
-| `tenure_risk_window` | $\mathbb{I}(\text{tenure} \in \{3, 4, 5\})$ | **Tenure Friction Milestone**: Captures empirical turnover surge observed at years 3 to 5. | **Significant** |
-| `unrewarded_high_performer` | $\mathbb{I}(\text{eval} > 0.8 \land \text{promo} = 0 \land \text{salary} \ne \text{'high'})$ | **Career Plateau**: Identifies unpromoted top talent vulnerable to external headhunting. | **Significant** |
-| `salary_num` | $\text{Ordinal mapping } (\text{low}=1, \text{medium}=2, \text{high}=3)$ | Quantifies compensation tier for numerical computation. | **Top 10** |
-| `salary_workload_ratio` | $\frac{\text{salary\_num}}{\text{hours} / 100}$ | **Effort-to-Compensation Equity**: Measures whether hours worked match compensation level. | **Top 10 (3.43%)** |
-| `underworked` | $\mathbb{I}(\text{hours} < 150 \land \text{projects} \le 2)$ | **Disengagement Signal**: Identifies underutilized employees drifting toward attrition. | **Significant** |
+| `eval_sat_diff` | `last_evaluation - satisfaction_level` | **Underappreciated Performer Gap**: Star performers with low satisfaction are prime flight risks. | **Top 5 (8.34%)** |
+| `projects_per_year` | `number_project / time_spend_company` | **Project Velocity**: Workload intensity relative to tenure. | **Top 4 (8.75%)** |
+| `hours_per_project` | `average_montly_hours / number_project` | **Workload Concentration**: Differentiates multi-tasking overload from deep-focus allocation. | **Top 8 (5.37%)** |
+| `overworked` | `hours > 240 and projects >= 5` | **Overwork / Overtime Flag**: Identifies chronic overtime contributors. | **Top 9 (5.16%)** |
+| `burnout_risk` | `eval > 0.75 and hours > 220 and sat < 0.45` | **High-Performer Burnout Indicator**: Identifies critical talent at immediate risk of exhaustion. | **Significant** |
+| `tenure_risk_window` | `tenure in [3, 4, 5]` | **Tenure Friction Milestone**: Captures empirical turnover surge observed at years 3 to 5. | **Significant** |
+| `unrewarded_high_performer` | `eval > 0.8 and promo == 0 and salary != high` | **Career Plateau**: Identifies unpromoted top talent vulnerable to external headhunting. | **Significant** |
+| `salary_num` | `low: 1, medium: 2, high: 3` | Quantifies compensation tier for numerical computation. | **Top 10** |
+| `salary_workload_ratio` | `salary_num / (hours / 100)` | **Effort-to-Compensation Equity**: Measures whether hours worked match compensation level. | **Top 10 (3.43%)** |
+| `underworked` | `hours < 150 and projects <= 2` | **Disengagement Signal**: Identifies underutilized employees drifting toward attrition. | **Significant** |
+
+### Mathematical Formulations (GitHub Block Math)
+
+$$
+\text{eval\_sat\_diff} = \text{last\_evaluation} - \text{satisfaction\_level}
+$$
+
+$$
+\text{projects\_per\_year} = \frac{\text{number\_project}}{\max(1, \text{time\_spend\_company})}
+$$
+
+$$
+\text{hours\_per\_project} = \frac{\text{average\_montly\_hours}}{\max(1, \text{number\_project})}
+$$
+
+$$
+\text{burnout\_risk} = \mathbb{I}(\text{last\_evaluation} > 0.75 \land \text{average\_montly\_hours} > 220 \land \text{satisfaction\_level} < 0.45)
+$$
+
+$$
+\text{overworked} = \mathbb{I}(\text{average\_montly\_hours} > 240 \land \text{number\_project} \ge 5)
+$$
+
+$$
+\text{salary\_workload\_ratio} = \frac{\text{salary\_num}}{\text{average\_montly\_hours} / 100}
+$$
 
 ---
 

@@ -14,15 +14,20 @@ import numpy as np
 from src.data.validation import validate_single_record, validate_employee_data
 from src.features.preprocessing import engineer_features
 
-DEFAULT_PIPELINE_PATH = os.path.join("artifacts", "model_pipeline.joblib")
+def load_pipeline(pipeline_path: Optional[str] = None) -> Dict[str, Any]:
+    """Loads the serialized model pipeline artifact with multi-location fallback."""
+    if pipeline_path is None:
+        root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        candidates = [
+            os.path.join("artifacts", "model_pipeline.joblib"),
+            os.path.join(root_dir, "artifacts", "model_pipeline.joblib")
+        ]
+        pipeline_path = next((c for c in candidates if os.path.exists(c)), "artifacts/model_pipeline.joblib")
 
-
-def load_pipeline(pipeline_path: str = DEFAULT_PIPELINE_PATH) -> Dict[str, Any]:
-    """Loads the serialized model pipeline artifact."""
     if not os.path.exists(pipeline_path):
         raise FileNotFoundError(
             f"Model pipeline not found at '{pipeline_path}'. "
-            "Please train the model first by running: python src/models/train.py"
+            "Please train the model first by running: python -m src.models.train"
         )
     return joblib.load(pipeline_path)
 

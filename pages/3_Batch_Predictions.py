@@ -36,8 +36,13 @@ except Exception as e:
 st.subheader("1. Template & Guidelines")
 t_col1, t_col2 = st.columns([1, 2])
 with t_col1:
-    sample_path = os.path.join("data", "sample", "sample_new_employees.csv")
-    if os.path.exists(sample_path):
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sample_candidates = [
+        os.path.join("data", "sample", "sample_new_employees.csv"),
+        os.path.join(root_dir, "data", "sample", "sample_new_employees.csv")
+    ]
+    sample_path = next((c for c in sample_candidates if os.path.exists(c)), None)
+    if sample_path and os.path.exists(sample_path):
         with open(sample_path, "rb") as f:
             st.download_button(
                 label="📥 Download Sample CSV Template",

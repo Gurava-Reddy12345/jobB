@@ -48,8 +48,13 @@ except Exception as e:
 
 # Retrieve model recall from evaluation report if available
 test_recall = None
-eval_path = os.path.join("reports", "model_evaluation.json")
-if os.path.exists(eval_path):
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+eval_candidates = [
+    os.path.join("reports", "model_evaluation.json"),
+    os.path.join(root_dir, "reports", "model_evaluation.json")
+]
+eval_path = next((c for c in eval_candidates if os.path.exists(c)), None)
+if eval_path and os.path.exists(eval_path):
     try:
         with open(eval_path, "r") as f:
             eval_data = json.load(f)

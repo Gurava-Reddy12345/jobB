@@ -178,7 +178,7 @@ def create_risk_gauge(probability: float) -> go.Figure:
         title=dict(text="<b>Estimated Flight Risk</b>", font=dict(size=15, color="#475569")),
         gauge=dict(
             axis=dict(range=[0, 100], tickwidth=1, tickcolor="#94a3b8"),
-            bar=dict(color="#0f172a", width=6),
+            bar=dict(color="#0f172a", thickness=0.25),
             steps=[
                 {"range": [0, 35], "color": "#dcfce7"},
                 {"range": [35, 65], "color": "#fef3c7"},
@@ -191,11 +191,10 @@ def create_risk_gauge(probability: float) -> go.Figure:
             )
         )
     ))
-    fig.update_layout(
-        **CHART_LAYOUT,
-        height=260,
-        margin=dict(l=30, r=30, t=50, b=10)
-    )
+    layout_cfg = dict(CHART_LAYOUT)
+    layout_cfg["height"] = 260
+    layout_cfg["margin"] = dict(l=30, r=30, t=50, b=10)
+    fig.update_layout(**layout_cfg)
     return fig
 
 

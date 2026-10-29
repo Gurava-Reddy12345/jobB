@@ -30,10 +30,15 @@ st.title("📈 Model Performance & Reliability")
 st.markdown("Empirical benchmark results measured exclusively on held-out test splits.")
 
 # Load evaluation report
-report_path = os.path.join("reports", "model_evaluation.json")
-if not os.path.exists(report_path):
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+report_candidates = [
+    os.path.join("reports", "model_evaluation.json"),
+    os.path.join(root_dir, "reports", "model_evaluation.json")
+]
+report_path = next((c for c in report_candidates if os.path.exists(c)), None)
+if not report_path or not os.path.exists(report_path):
     st.error(
-        f"Evaluation report not found at `{report_path}`. "
+        "Evaluation report not found. "
         "Please train and benchmark models first by executing: `python -m src.models.train`"
     )
     st.stop()
