@@ -2,7 +2,8 @@
 
 > **Document Type**: Architecture & Engineering Deep-Dive  
 > **Target Repository**: `https://github.com/Svamsi2006/jobB.git`  
-> **Author**: Antigravity Engineering  
+> |**Author**:| Konda Guru Reddy,| Ramesh |,Vamsi siva ganesh |, Samrat Raj.|
+
 > **Status**: Production-Ready / Fully Tested  
 
 ---
