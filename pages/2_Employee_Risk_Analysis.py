@@ -209,6 +209,54 @@ with result_col:
             st.markdown(f"**Model Champion:** `{pipeline.get('model_name', 'Random Forest')}`")
             st.markdown(f"**Estimated Flight Likelihood:** `{prob_pct}%`")
 
+        # Plain-English Executive HR Narrative (For Non-Technical Users)
+        st.markdown("---")
+        st.subheader("🗣️ Plain-English Executive HR Summary")
+        st.caption("A human-centered breakdown translated for non-technical managers and business leaders.")
+
+        cache_key = f"narrative_{prob}_{record['satisfaction_level']}_{record['last_evaluation']}_{record['time_spend_company']}_{record['average_montly_hours']}_{record['number_project']}"
+
+        if cache_key not in st.session_state:
+            with st.spinner("Drafting executive HR summary with OpenRouter AI..."):
+                st.session_state[cache_key] = generate_llm_plain_english_summary(
+                    record=record,
+                    probability=prob,
+                    risk_category=cat
+                )
+
+        narrative_text = st.session_state[cache_key]
+
+        st.markdown(
+            f"""
+            <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-left: 5px solid #1e3a8a; border-radius: 10px; padding: 1.25rem 1.4rem; margin: 0.8rem 0; font-size: 0.95rem; line-height: 1.65; color: #1e293b; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                {narrative_text.replace(chr(10), '<br>')}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        n_col1, n_col2 = st.columns(2)
+        with n_col1:
+            if st.button("🔄 Regenerate with AI (OpenRouter LLM)", use_container_width=True):
+                with st.spinner("Querying OpenRouter LLM for refreshed narrative..."):
+                    st.session_state[cache_key] = generate_llm_plain_english_summary(
+                        record=record,
+                        probability=prob,
+                        risk_category=cat
+                    )
+                st.rerun()
+        with n_col2:
+            if st.button("📝 Standard Rule-Based Narrative", use_container_width=True):
+                st.session_state[cache_key] = generate_deterministic_plain_english_summary(
+                    record=record,
+                    probability=prob,
+                    risk_category=cat
+                )
+                st.rerun()
+
+        st.markdown("---")
+        st.subheader("🔍 Algorithmic Explainability & Drivers")
+
         # Explainability SHAP chart
         with st.spinner("Calculating SHAP feature attributions..."):
             explanation = explain_prediction(record, pipeline=pipeline)

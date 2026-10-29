@@ -277,8 +277,30 @@ In `pages/5_What_If_Lab.py`, decision-makers can adjust employee levers (e.g., r
 
 ---
 
-## 10. Verification & Quality Assurance
+## 10. Plain-English Executive HR Narrative Engine
 
-- **Unit Testing**: All 12 unit tests pass 100% via `python -m pytest tests/`.
+To bridge the gap between technical machine learning outputs and non-technical business leaders, AttritionIQ integrates a dedicated Plain-English Narrative Generator (`src/analytics/narrative.py`):
+
+### 10.1 Empathetic Human-First Translation
+- **Algorithmic Decoupling**: Automatically translates probability scores, risk tiers, and feature interactions into empathetic business prose, strictly eliminating technical jargon (e.g., no mentions of SHAP, trees, p-values, or decision boundaries).
+- **Dual Architecture**:
+  1. **OpenRouter LLM Integration**: Leverages models such as `nvidia/nemotron-3.5-lightning:free` and `openrouter/auto` to craft contextual, natural HR narratives with conversational advice.
+  2. **Deterministic Rule-Based Fallback**: Guarantees instant, zero-latency executive summaries even when offline or without an active API key.
+
+### 10.2 Logical Tenure-Grammar Resolution
+A common flaw in automated HR systems is generating logically flawed assertions such as *"They have not received a promotion in the last 5 years"* for an employee who has only been with the company for 3 years (since $3 < 5$).
+AttritionIQ enforces strict conditional grammar logic via `format_promotion_tenure_phrase`:
+- For employees with **`tenure < 5`**:
+  - `promoted = 0`: *"They have spent {tenure} years with the company without receiving a promotion during their entire tenure."*
+  - `promoted = 1`: *"They have been with the company for {tenure} years and have received a promotion during their tenure."*
+- For employees with **`tenure >= 5`**:
+  - `promoted = 0`: *"They have been with the company for {tenure} years without a recorded promotion in the last 5 years."*
+  - `promoted = 1`: *"They have been with the company for {tenure} years, with at least one promotion recorded in the last 5 years."*
+
+---
+
+## 11. Verification & Quality Assurance
+
+- **Unit Testing**: All 17 unit tests pass 100% via `python -m pytest tests/` covering data validation, feature engineering, prediction thresholds, and executive narrative generation.
 - **Target Leakage Safeguard**: Any uploaded CSV containing the `left` column in inference mode is automatically isolated.
 - **Reproducibility**: Executing `python -m src.models.train` reproduces all evaluation reports and serialized artifacts identically.

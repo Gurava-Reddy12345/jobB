@@ -19,6 +19,7 @@
 4. **What-If Scenario Simulator**: Simulates counterfactual policy interventions (e.g., workload rebalancing, compensation shifts) and compares predicted flight risk shifts side-by-side.
 5. **Data Quality & Model Governance**: Audits duplicate feature profiles, isolates historical targets to eliminate data leakage, benchmarks group-based vs. random-split generalization, and generates downloadable audit reports.
 6. **Batch Inference Engine**: Uploads, validates, cleans, and scores entire workforce CSV cohorts with real-time row-by-row error diagnostics and CSV report export.
+7. **Plain-English Executive HR Narratives**: Generates empathetic, non-technical executive summaries powered by OpenRouter LLM (`nvidia/nemotron-3.5-lightning:free`) with automated deterministic fallback and rigorous tenure-grammar validation (preventing logical contradictions for employees with `<5` years tenure).
 
 ---
 
@@ -61,11 +62,12 @@ AttritionIQ/
 │   │   └── explain.py              # SHAP individual attributions & waterfall generation
 │   └── analytics/
 │       ├── __init__.py
-│       └── workforce.py            # Workforce KPIs, multi-dimensional slices & automated insights
+│       ├── workforce.py            # Workforce KPIs, multi-dimensional slices & automated insights
+│       └── narrative.py            # Plain-English HR narrative generator (OpenRouter LLM & fallback)
 │
 ├── pages/
 │   ├── 1_Workforce_Overview.py     # Screen 1: Macro workforce analytics & automated insights
-│   ├── 2_Employee_Risk_Analysis.py # Screen 2: Individual employee risk scoring & SHAP waterfall
+│   ├── 2_Employee_Risk_Analysis.py # Screen 2: Individual risk scoring, SHAP waterfall & executive narrative
 │   ├── 3_Batch_Predictions.py      # Screen 3: CSV cohort upload, validation & batch scoring
 │   ├── 4_Model_Performance.py      # Screen 4: Model benchmarks, ROC/PR curves & reliability panel
 │   ├── 5_What_If_Lab.py            # Screen 5: Counterfactual policy simulator
@@ -89,7 +91,8 @@ AttritionIQ/
     ├── __init__.py
     ├── test_data_validation.py     # Unit tests for validation, range bounds & aliases
     ├── test_preprocessing.py       # Unit tests for feature engineering & column transformers
-    └── test_predictions.py         # Unit tests for prediction logic, thresholds & risk categories
+    ├── test_predictions.py         # Unit tests for prediction logic, thresholds & risk categories
+    └── test_narrative.py           # Unit tests for plain-English narrative & grammar consistency
 ```
 
 ---
