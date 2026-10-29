@@ -1,0 +1,29 @@
+{
+  "project": "AttritionIQ",
+  "model_version": "1.0.0",
+  "training_date": "2026-10-29T11:28:46.391686",
+  "champion_model": "Random Forest",
+  "decision_threshold": 0.58,
+  "target": "left (0 = Stayed, 1 = Left)",
+  "dataset_total_records": 14999,
+  "split_sizes": {
+    "train": 10499,
+    "val": 2250,
+    "test": 2250
+  },
+  "raw_features_count": 9,
+  "engineered_features_count": 10,
+  "total_transformed_features": 30,
+  "feature_importances_top_10": {
+    "satisfaction_level": 0.1829,
+    "time_spend_company": 0.1412,
+    "number_project": 0.09472,
+    "projects_per_year": 0.08753,
+    "eval_sat_diff": 0.08337,
+    "average_montly_hours": 0.07611,
+    "last_evaluation": 0.07124,
+    "hours_per_project": 0.05368,
+    "overworked": 0.05156,
+    "salary_workload_ratio": 0.03428
+  }
+}

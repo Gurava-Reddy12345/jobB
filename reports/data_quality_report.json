@@ -1,0 +1,52 @@
+{
+  "total_records": 14999,
+  "total_columns": 11,
+  "columns_list": [
+    "Emp_Id",
+    "satisfaction_level",
+    "last_evaluation",
+    "number_project",
+    "average_montly_hours",
+    "time_spend_company",
+    "Work_accident",
+    "left",
+    "promotion_last_5years",
+    "Department",
+    "salary"
+  ],
+  "missing_counts": {
+    "Emp_Id": 0,
+    "satisfaction_level": 0,
+    "last_evaluation": 0,
+    "number_project": 0,
+    "average_montly_hours": 0,
+    "time_spend_company": 0,
+    "Work_accident": 0,
+    "left": 0,
+    "promotion_last_5years": 0,
+    "Department": 0,
+    "salary": 0
+  },
+  "total_missing_values": 0,
+  "exact_duplicates": 0,
+  "repeated_feature_profiles": 3008,
+  "target_stats": {
+    "stayed_count": 11428,
+    "left_count": 3571,
+    "attrition_rate_pct": 23.81
+  },
+  "excluded_features": [
+    "Emp_Id"
+  ],
+  "used_features": [
+    "satisfaction_level",
+    "last_evaluation",
+    "number_project",
+    "average_montly_hours",
+    "time_spend_company",
+    "Work_accident",
+    "promotion_last_5years",
+    "Department",
+    "salary"
+  ]
+}

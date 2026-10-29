@@ -1,0 +1,11 @@
+Emp_Id,satisfaction_level,last_evaluation,number_project,average_montly_hours,time_spend_company,Work_accident,promotion_last_5years,Department,salary
+SYNTH-101,0.38,0.53,2,157,3,0,0,sales,low
+SYNTH-102,0.80,0.86,5,262,6,0,0,sales,medium
+SYNTH-103,0.11,0.88,7,272,4,0,0,sales,medium
+SYNTH-104,0.72,0.87,5,223,5,0,0,sales,low
+SYNTH-105,0.37,0.52,2,159,3,0,0,technical,low
+SYNTH-106,0.41,0.50,2,153,3,0,0,support,low
+SYNTH-107,0.10,0.77,6,247,4,0,0,IT,low
+SYNTH-108,0.92,0.85,5,259,5,0,0,marketing,high
+SYNTH-109,0.89,1.00,5,224,5,0,0,RandD,low
+SYNTH-110,0.42,0.53,2,142,3,0,0,management,medium
