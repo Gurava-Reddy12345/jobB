@@ -81,46 +81,66 @@ To provide the machine learning models with high-signal behavioral indicators, w
 #### Detailed Formulations & Empirical Evidence:
 
 1. **`eval_sat_diff` (Underappreciated Performer Gap)**:
-   $$\text{eval\_sat\_diff} = \text{last\_evaluation} - \text{satisfaction\_level}$$
+   $$
+\text{eval\_sat\_diff} = \text{last\_evaluation} - \text{satisfaction\_level}
+$$
    - *Behavioral Rationale*: High-performing employees who feel dissatisfied or undervalued represent a prime flight risk.
    - *Empirical Data*: For retained employees, the mean gap is **0.048**; for departed employees, it surges to **0.278** (a **5.7x increase**).
    - *Impact*: Emerged as the **#5 overall feature** (8.34% tree importance).
 
 2. **`burnout_risk` (High-Performer Burnout Flag)**:
-   $$\text{burnout\_risk} = \mathbb{I}(\text{evaluation} > 0.75 \land \text{monthly\_hours} > 220 \land \text{satisfaction} < 0.45)$$
+   $$
+\text{burnout\_risk} = \mathbb{I}(\text{evaluation} > 0.75 \land \text{monthly\_hours} > 220 \land \text{satisfaction} < 0.45)
+$$
    - *Behavioral Rationale*: Identifies star contributors logging extreme hours whose morale has collapsed under unsustainable pressure.
    - *Empirical Data*: Found in only **1.7%** of retained staff, but present in **24.8%** of departed staff (a **14.5x surge**).
 
 3. **`hours_per_project` (Workload Concentration)**:
-   $$\text{hours\_per\_project} = \frac{\text{average\_montly\_hours}}{\max(1, \text{number\_project})}$$
+   $$
+\text{hours\_per\_project} = \frac{\text{average\_montly\_hours}}{\max(1, \text{number\_project})}
+$$
    - *Behavioral Rationale*: Separates focused project commitment from excessive multi-tasking overload.
 
 4. **`projects_per_year` (Project Velocity)**:
-   $$\text{projects\_per\_year} = \frac{\text{number\_project}}{\max(1, \text{time\_spend\_company})}$$
+   $$
+\text{projects\_per\_year} = \frac{\text{number\_project}}{\max(1, \text{time\_spend\_company})}
+$$
    - *Behavioral Rationale*: Quantifies the rate of project turnover relative to organizational tenure.
    - *Impact*: Emerged as the **#4 overall feature** (8.75% tree importance).
 
 5. **`overworked` (Chronic Overtime Flag)**:
-   $$\text{overworked} = \mathbb{I}(\text{monthly\_hours} > 240 \land \text{projects} \ge 5)$$
+   $$
+\text{overworked} = \mathbb{I}(\text{monthly\_hours} > 240 \land \text{projects} \ge 5)
+$$
    - *Impact*: Captured in top 10 feature importances (5.16%).
 
 6. **`underworked` (Disengagement Flag)**:
-   $$\text{underworked} = \mathbb{I}(\text{monthly\_hours} < 150 \land \text{projects} \le 2)$$
+   $$
+\text{underworked} = \mathbb{I}(\text{monthly\_hours} < 150 \land \text{projects} \le 2)
+$$
    - *Behavioral Rationale*: Captures bored or sidelined employees drifting away from active contribution.
 
 7. **`unrewarded_high_performer` (Career Ceiling Flag)**:
-   $$\text{unrewarded} = \mathbb{I}(\text{evaluation} > 0.80 \land \text{promotion\_5yrs} = 0 \land \text{salary} \ne \text{'high'})$$
+   $$
+\text{unrewarded} = \mathbb{I}(\text{evaluation} > 0.80 \land \text{promotion\_5yrs} = 0 \land \text{salary} \ne \text{'high'})
+$$
    - *Behavioral Rationale*: High contributors overlooked for promotions on sub-market compensation.
 
 8. **`tenure_risk_window` (Turnover Milestone Band)**:
-   $$\text{tenure\_risk\_window} = \mathbb{I}(\text{time\_spend\_company} \in \{3, 4, 5\})$$
+   $$
+\text{tenure\_risk\_window} = \mathbb{I}(\text{time\_spend\_company} \in \{3, 4, 5\})
+$$
    - *Empirical Data*: Over 80% of historical departures occur between years 3 and 5.
 
 9. **`salary_num` (Ordinal Compensation Value)**:
-   $$\text{salary\_num} \in \{1: \text{low}, 2: \text{medium}, 3: \text{high}\}$$
+   $$
+\text{salary\_num} \in \{1: \text{low}, 2: \text{medium}, 3: \text{high}\}
+$$
 
 10. **`salary_workload_ratio` (Effort-Compensation Equity)**:
-    $$\text{salary\_workload\_ratio} = \frac{\text{salary\_num}}{\text{average\_montly\_hours} / 100}$$
+    $$
+\text{salary\_workload\_ratio} = \frac{\text{salary\_num}}{\text{average\_montly\_hours} / 100}
+$$
     - *Behavioral Rationale*: Evaluates whether compensation scales fairly with monthly effort volume.
 
 ---
@@ -235,7 +255,9 @@ This minor variance definitively proves that the model maintains robust, genuine
 For every single-profile prediction in `pages/2_Employee_Risk_Analysis.py`:
 1. The profile is transformed via the fitted pipeline.
 2. `shap.TreeExplainer` calculates the exact Shapley contribution of every feature:
-   $$f(x) = \phi_0 + \sum_{i=1}^{M} \phi_i(x)$$
+   $$
+f(x) = \phi_0 + \sum_{i=1}^{M} \phi_i(x)
+$$
    where $\phi_0$ is the base expected flight probability (~23.8%) and $\phi_i$ is the marginal contribution of feature $i$.
 3. Contributions are segmented into:
    - **Risk Drivers ($\phi_i > 0$)**: E.g., low satisfaction score, long tenure milestone without promotion, excessive monthly hours.
